@@ -8,8 +8,14 @@ fastapi = "*"
 uvicorn = "*"
 python-dotenv = "*"
 pydantic-settings = "*"
+xmltodict = "*"
+pandas = "*"
+lxml = "*"
+requests = "*"
+elasticsearch = "*"
 
 [dev-packages]
+pylint = "*"
 
 [requires]
 python_version = "3.12"
