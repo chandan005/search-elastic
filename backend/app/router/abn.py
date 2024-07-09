@@ -1,4 +1,3 @@
-# pylint: disable=C0116
 import json
 import tempfile
 from fastapi import APIRouter, UploadFile, File, HTTPException
