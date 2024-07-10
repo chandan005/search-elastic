@@ -7,9 +7,6 @@ from elasticsearch.exceptions import ElasticsearchWarning
 
 warnings.filterwarnings('ignore', category=ElasticsearchWarning)
 
-es = Elasticsearch(['http://localhost:9200'])
-
-INDEX_NAME = 'abn'
 
 SEARCH_TEMPLATES = {
     "wildcard_search_template": {
