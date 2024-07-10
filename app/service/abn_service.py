@@ -1,15 +1,10 @@
 import os
 from io import BytesIO
 import zipfile
-import glob
 import time
 import xml.etree.ElementTree as ET
 
 import requests
-from typing import List
-import pandas as pd
-from app.schema.search import Search
-from app.config.config import settings
 from app.elastic import abn_elastic_service
 
 DATA_FOLDER="app/resources/downloads"
@@ -96,60 +91,6 @@ def process_xml_v2(file_path):
                 # Clear the element to free memory
                 root.clear()
 
-    print('Parsing XML to JSON completed.')
-    return records
-
-def process_xml(file_path):
-    print("Preparing to process file: ", str(file_path))
-    with open(file_path, 'rb') as file:
-        xml_content = file.read()
-    print('Parsing xml to dict.')
-    data = xmltodict.parse(xml_content)
-
-    records = []
-    print('Parsing each record to JSON')
-    for abr in data['Transfer']['ABR']:
-        try:
-            record = {
-                'abn': {
-                    'status': abr.get('ABN', {}).get('@status', None),
-                    'statusFromDate': abr.get('ABN', {}).get('@ABNStatusFromDate', None),
-                    'value': abr.get('ABN', {}).get('#text', None)
-                },
-                'entityType': {
-                    'type': abr.get('EntityType', {}).get('EntityTypeInd', None),
-                    'value': abr.get('EntityType', {}).get('EntityTypeText', None)
-                },
-                'mainEntity': {
-                    'nonIndividualName': {
-                        'type': abr.get('MainEntity', {}).get('NonIndividualName', {}).get('@type', None),
-                        'value': abr.get('MainEntity', {}).get('NonIndividualName', {}).get('NonIndividualNameText', None)
-                    },
-                    'businessAddress': {
-                        'state': abr.get('MainEntity', {}).get('BusinessAddress', {}).get('AddressDetails', {}).get('State', None),
-                        'postCode': abr.get('MainEntity', {}).get('BusinessAddress', {}).get('AddressDetails', {}).get('Postcode', None)
-                    }
-                },
-                'asic': {
-                    'type': abr.get('ASICNumber', {}).get('@ASICNumberType', None),
-                    'value': abr.get('ASICNumber', {}).get('#text', None)
-                },
-                'gst': {
-                    'status': abr.get('GST', {}).get('@status', None),
-                    'statusFromDate': abr.get('GST', {}).get('@GSTStatusFromDate', None)
-                },
-                'otherEntity': {
-                    'nonIndividualName': {
-                        'type': abr.get('OtherEntity', {}).get('NonIndividualName', {}).get('@type', None),
-                        'value': abr.get('OtherEntity', {}).get('NonIndividualName', {}).get('NonIndividualNameText', None)
-                    }
-                }
-            }
-
-            records.append(record)
-        except Exception as e:
-            print('Exception processing xml', e.with_traceback())
-            continue
     print('Parsing XML to JSON completed.')
     return records
 
